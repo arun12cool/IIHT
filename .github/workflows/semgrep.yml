@@ -1,0 +1,25 @@
+name: arun-Semgrep
+on:
+  pull_request: {}
+push:
+    branches:
+      - master
+      - main
+    paths:
+      - .github/workflows/semgrep.yml
+  schedule:
+    - cron: '0 0 * * 0'
+jobs:
+  semgrep:
+    name: Scan
+    runs-on: ubuntu-latest
+    container:
+      image: returntocorp/semgrep
+    # Skip any PR created by dependabot to avoid permission issues
+    if: (github.actor != 'dependabot[bot]')
+    steps:
+      # Fetch project source
+      - uses: actions/checkout@v3
+
+      - run: semgrep ci
+   
